@@ -13,12 +13,17 @@ export default function LoginScreen({ navigation }) {
   const [username, setUsername] = useState("");
   const onChangeUsername = (text) => {
     setUsername(text);
+    if (textVisible) setTextVisible(false);
+    if (!username || !password) return;
   };
 
   const [password, setPassword] = useState("");
   const onChangePassword = (text) => {
     setPassword(text);
+    if (textVisible) setTextVisible(false);
   };
+
+  const [textVisible, setTextVisible] = useState(false);
 
   const onLoginPress = () => {
     let user = users.find((user) => {
@@ -29,9 +34,9 @@ export default function LoginScreen({ navigation }) {
       navigation.navigate("Profile", { user });
     } else {
       console.log("failure");
+      setTextVisible(true);
     }
   };
-
   return (
     <SafeAreaView style={styles.container}>
       <Text style={styles.title}>Login</Text>
@@ -50,6 +55,10 @@ export default function LoginScreen({ navigation }) {
         style={styles.logininput}
         secureTextEntry={true}
       />
+
+      {textVisible && (
+        <Text style={styles.errorText}>Invalid Username or Password!</Text>
+      )}
 
       <TouchableOpacity onPress={onLoginPress}>
         <Text style={styles.loginbutton}>Login</Text>
@@ -78,12 +87,13 @@ const styles = StyleSheet.create({
     height: 40,
     borderWidth: 1,
     borderColor: "#ccc",
-    borderRadius: 5,
+    borderRadius: 15,
     paddingHorizontal: 10,
     width: "50%",
     backgroundColor: "#fff",
   },
   loginbutton: {
+    margin: 5,
     padding: 4,
     borderWidth: 1,
     width: 60,
@@ -92,6 +102,9 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     backgroundColor: "#3366ff",
     color: "#f2f2f2",
-    fontFamily: 'Courier',
+    fontFamily: "Courier",
+  },
+  errorText: {
+    color: "red",
   },
 });
